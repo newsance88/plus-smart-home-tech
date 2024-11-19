@@ -13,6 +13,7 @@ public abstract class BaseHubHandler<T extends SpecificRecordBase> implements Hu
     private final KafkaConfig config;
     private final KafkaEventProducer producer;
     private static final String HUB_TOPIC = "telemetry.hubs.v1";
+
     protected abstract T mapToAvro(HubEvent event);
 
     public void handle(HubEvent event) {

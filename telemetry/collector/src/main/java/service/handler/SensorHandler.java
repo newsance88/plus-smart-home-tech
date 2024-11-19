@@ -5,5 +5,6 @@ import sensor.SensorEventType;
 
 public interface SensorHandler {
     SensorEventType getMessageType();
+
     void handle(SensorEvent event);
 }
