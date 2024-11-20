@@ -3,9 +3,6 @@ collector:
     producer:
       properties:
         "bootstrap.servers": localhost:9092
-        "client.id": "telemetry.collection"
-        "key.serializer": org.apache.kafka.common.serialization.StringSerializer
-        "value.serializer": config.AvroSerializer
       topics:
         sensor-events: telemetry.sensor.v1
         hubs-events: telemetry.hubs.v1
