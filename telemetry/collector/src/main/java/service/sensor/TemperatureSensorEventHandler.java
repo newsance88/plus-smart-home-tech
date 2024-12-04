@@ -2,10 +2,8 @@ package service.sensor;
 
 import config.KafkaConfig;
 import config.KafkaEventProducer;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorAvro;
-import sensor.SensorEvent;
-import sensor.SensorEventType;
-import sensor.TemperatureSensorEvent;
 import service.handler.BaseEventHandler;
 
 public class TemperatureSensorEventHandler extends BaseEventHandler<TemperatureSensorAvro> {
@@ -14,21 +12,21 @@ public class TemperatureSensorEventHandler extends BaseEventHandler<TemperatureS
     }
 
     @Override
-    protected TemperatureSensorAvro mapToAvro(SensorEvent event) {
-        var tempEvent = (TemperatureSensorEvent) event;
+    protected TemperatureSensorAvro mapToAvro(SensorEventProto event) {
+        var tempEvent = event.getTemperatureSensorEvent();
 
         return new TemperatureSensorAvro(
-                tempEvent.getId(),
-                tempEvent.getHubId(),
-                tempEvent.getTimestamp(),
+                event.getId(),
+                event.getHubId(),
+                event.getTimestamp().getSeconds(),
                 tempEvent.getTemperatureC(),
                 tempEvent.getTemperatureF()
         );
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.TEMPERATURE_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.TEMPERATURE_SENSOR_EVENT;
     }
 
 }

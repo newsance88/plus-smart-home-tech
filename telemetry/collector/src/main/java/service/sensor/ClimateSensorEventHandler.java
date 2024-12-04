@@ -3,10 +3,8 @@ package service.sensor;
 import config.KafkaConfig;
 import config.KafkaEventProducer;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorAvro;
-import sensor.ClimateSensorEvent;
-import sensor.SensorEvent;
-import sensor.SensorEventType;
 import service.handler.BaseEventHandler;
 
 @Service
@@ -17,8 +15,8 @@ public class ClimateSensorEventHandler extends BaseEventHandler<ClimateSensorAvr
     }
 
     @Override
-    protected ClimateSensorAvro mapToAvro(SensorEvent event) {
-        var climateEvent = (ClimateSensorEvent) event;
+    protected ClimateSensorAvro mapToAvro(SensorEventProto event) {
+        var climateEvent = event.getClimateSensorEvent();
         return new ClimateSensorAvro(
                 climateEvent.getTemperatureC(),
                 climateEvent.getHumidity(),
@@ -27,8 +25,9 @@ public class ClimateSensorEventHandler extends BaseEventHandler<ClimateSensorAvr
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.CLIMATE_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.CLIMATE_SENSOR_EVENT;
     }
+
 }
 

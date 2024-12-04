@@ -3,10 +3,8 @@ package service.sensor;
 import config.KafkaConfig;
 import config.KafkaEventProducer;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
-import sensor.MotionSensorEvent;
-import sensor.SensorEvent;
-import sensor.SensorEventType;
 import service.handler.BaseEventHandler;
 
 @Service
@@ -16,18 +14,18 @@ public class MotionSensorEventHandler extends BaseEventHandler<MotionSensorAvro>
     }
 
     @Override
-    protected MotionSensorAvro mapToAvro(SensorEvent event) {
-        var motionEvent = (MotionSensorEvent) event;
+    protected MotionSensorAvro mapToAvro(SensorEventProto event) {
+        var motionEvent = event.getMotionSensorEvent();
 
         return new MotionSensorAvro(
                 motionEvent.getLinkQuality(),
-                motionEvent.isMotion(),
+                motionEvent.getMotion(),
                 motionEvent.getVoltage()
         );
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.MOTION_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.MOTION_SENSOR_EVENT;
     }
 }

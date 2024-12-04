@@ -1,0 +1,10 @@
+collector:
+  kafka:
+    producer:
+      properties:
+        "bootstrap-servers": localhost:9092
+      topics:
+        in: telemetry.sensors.v1
+        out: telemetry.snapshots.v1
+      group:
+        id: aggregator

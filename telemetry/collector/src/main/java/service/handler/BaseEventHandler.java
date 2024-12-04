@@ -5,7 +5,7 @@ import config.KafkaEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
-import sensor.SensorEvent;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
 @RequiredArgsConstructor
 @Component
@@ -15,11 +15,11 @@ public abstract class BaseEventHandler<T extends SpecificRecordBase> implements 
     private final KafkaEventProducer producer;
     private static final String SENSOR_TOPIC = "telemetry.sensors.v1";
 
-    protected abstract T mapToAvro(SensorEvent event);
+    protected abstract T mapToAvro(SensorEventProto event);
 
-    public void handle(SensorEvent event) {
+    public void handle(SensorEventProto event) {
 
-        T avroEvent = mapToAvro(event);
-        producer.send(SENSOR_TOPIC, event.getId(), avroEvent);
+        T protoEvent = mapToAvro(event);
+        producer.send(SENSOR_TOPIC, event.getId(), protoEvent);
     }
 }

@@ -3,10 +3,8 @@ package service.sensor;
 import config.KafkaConfig;
 import config.KafkaEventProducer;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.LightSensorAvro;
-import sensor.LightSensorEvent;
-import sensor.SensorEvent;
-import sensor.SensorEventType;
 import service.handler.BaseEventHandler;
 
 @Service
@@ -17,8 +15,8 @@ public class LightSensorEventHandler extends BaseEventHandler<LightSensorAvro> {
     }
 
     @Override
-    protected LightSensorAvro mapToAvro(SensorEvent event) {
-        var lightEvent = (LightSensorEvent) event;
+    protected LightSensorAvro mapToAvro(SensorEventProto event) {
+        var lightEvent = event.getLightSensorEvent();
         return new LightSensorAvro(
                 lightEvent.getLinkQuality(),
                 lightEvent.getLuminosity()
@@ -26,7 +24,7 @@ public class LightSensorEventHandler extends BaseEventHandler<LightSensorAvro> {
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.LIGHT_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.LIGHT_SENSOR_EVENT;
     }
 }

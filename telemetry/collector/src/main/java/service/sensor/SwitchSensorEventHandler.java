@@ -3,10 +3,8 @@ package service.sensor;
 import config.KafkaConfig;
 import config.KafkaEventProducer;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
-import sensor.SensorEvent;
-import sensor.SensorEventType;
-import sensor.SwitchSensorEvent;
 import service.handler.BaseEventHandler;
 
 @Service
@@ -16,15 +14,15 @@ public class SwitchSensorEventHandler extends BaseEventHandler<SwitchSensorAvro>
     }
 
     @Override
-    protected SwitchSensorAvro mapToAvro(SensorEvent event) {
-        var switchEvent = (SwitchSensorEvent) event;
+    protected SwitchSensorAvro mapToAvro(SensorEventProto event) {
+        var switchEvent = event.getSwitchSensorEvent();
 
-        return new SwitchSensorAvro(switchEvent.isState());
+        return new SwitchSensorAvro(switchEvent.getState());
     }
 
     @Override
-    public SensorEventType getMessageType() {
-        return SensorEventType.SWITCH_SENSOR_EVENT;
+    public SensorEventProto.PayloadCase getMessageType() {
+        return SensorEventProto.PayloadCase.SWITCH_SENSOR_EVENT;
     }
 
 }
